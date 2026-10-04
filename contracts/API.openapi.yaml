@@ -1,0 +1,180 @@
+openapi: 3.1.0
+info:
+  title: SmoothFlow Property-Based Testing API
+  version: 1.0.0
+  description: API mínima del laboratorio para CRUD de Appointment.
+servers:
+  - url: http://localhost:3000
+paths:
+  /appointments:
+    post:
+      summary: Create an appointment
+      operationId: createAppointment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateAppointmentRequest"
+      responses:
+        "201":
+          description: Appointment created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Appointment"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "409":
+          $ref: "#/components/responses/Conflict"
+    get:
+      summary: List appointments
+      operationId: listAppointments
+      responses:
+        "200":
+          description: Appointment list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Appointment"
+  /appointments/{id}:
+    parameters:
+      - $ref: "#/components/parameters/AppointmentId"
+    get:
+      summary: Get an appointment by ID
+      operationId: getAppointment
+      responses:
+        "200":
+          description: Appointment found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Appointment"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    put:
+      summary: Update an appointment
+      operationId: updateAppointment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateAppointmentRequest"
+      responses:
+        "200":
+          description: Appointment updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Appointment"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+    delete:
+      summary: Delete an appointment
+      operationId: deleteAppointment
+      responses:
+        "204":
+          description: Appointment deleted
+        "404":
+          $ref: "#/components/responses/NotFound"
+components:
+  parameters:
+    AppointmentId:
+      name: id
+      in: path
+      required: true
+      description: Appointment UUID
+      schema:
+        type: string
+        format: uuid
+  schemas:
+    Appointment:
+      type: object
+      additionalProperties: false
+      required: [id, patientId, doctorId, scheduledAt, status]
+      properties:
+        id:
+          type: string
+          format: uuid
+        patientId:
+          type: string
+          minLength: 1
+          maxLength: 64
+        doctorId:
+          type: string
+          minLength: 1
+          maxLength: 64
+        scheduledAt:
+          type: string
+          format: date-time
+        status:
+          type: string
+          const: confirmed
+    CreateAppointmentRequest:
+      type: object
+      additionalProperties: false
+      required: [patientId, doctorId, scheduledAt]
+      properties:
+        patientId:
+          type: string
+          minLength: 1
+          maxLength: 64
+        doctorId:
+          type: string
+          minLength: 1
+          maxLength: 64
+        scheduledAt:
+          type: string
+          format: date-time
+    UpdateAppointmentRequest:
+      type: object
+      additionalProperties: false
+      minProperties: 1
+      properties:
+        patientId:
+          type: string
+          minLength: 1
+          maxLength: 64
+        doctorId:
+          type: string
+          minLength: 1
+          maxLength: 64
+        scheduledAt:
+          type: string
+          format: date-time
+    ErrorResponse:
+      type: object
+      additionalProperties: false
+      required: [error, message]
+      properties:
+        error:
+          type: string
+          enum: [validation_error, not_found, conflict]
+        message:
+          type: string
+  responses:
+    BadRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    NotFound:
+      description: Appointment not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    Conflict:
+      description: Doctor slot already occupied
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
