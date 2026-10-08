@@ -4,14 +4,15 @@
 
 - Fecha de verificación: 2026-10-05 (America/Santiago).
 - Fecha de revisión de entrega T09: 2026-10-07 (America/Santiago).
-- Rama y commit base: `main` en `94ad5b7` (`docs: add contracts and agentic factory backlog`).
+- Rama y commit base de la revisión local T07: `main` en `94ad5b7` (`docs: add contracts and agentic factory backlog`).
+- Commit de implementación publicado y validado remotamente: `625fe73a8d41cf41fb6ebba4bfe58f719405a46a`.
 - Estado revisado: commit base más la implementación de T01–T06 presente en el working tree. Al comenzar T07, los archivos de implementación y pruebas aún figuraban como no versionados.
-- Restricciones respetadas: no se modificaron `contracts/**` ni `tasks/**`.
+- Restricciones de implementación T01–T09: no se modificaron `contracts/**` ni `tasks/**`. Posteriormente se actualizó solo `tasks/README.md` para reflejar las tareas completadas.
 - T09 revisa el estado completo local, incluido el workflow de T08, y actualiza únicamente documentación de entrega.
 
 ## Resultado
 
-**PASS local.** Los 20 puntos de T07 cumplen los contratos y la documentación de T09 coincide con el repositorio. El único punto no confirmable como verde es la ejecución remota de GitHub Actions: el workflow existe localmente, pero la API pública de GitHub reportó 0 runs porque los cambios aún no están publicados.
+**PASS local y CI remoto confirmado.** Los 20 puntos de T07 cumplen los contratos y la documentación de T09 coincide con el repositorio. GitHub Actions ejecutó exitosamente el quality gate sobre el commit publicado `625fe73a8d41cf41fb6ebba4bfe58f719405a46a` el 2026-10-08: [ejecución 37819728353](https://github.com/andres-alvarez19/Property-based-testing/actions/runs/37819728353).
 
 ## Checklist T07
 
@@ -84,4 +85,6 @@ Tras las correcciones documentales se volvió a ejecutar el quality gate complet
 - `README.md` documenta objetivo, PBT frente a example-based testing, stack, arquitectura, instalación, comandos, endpoints, properties, shrinking y una demo reproducible.
 - `docs/TRACEABILITY.md` usa rutas reales y cubre los 12 puntos del checklist académico.
 - `.github/workflows/ci.yml` está configurado para pull requests y push a `main`, con los cinco pasos exigidos por `ACCEPTANCE.md`.
-- Consulta de solo lectura a `https://api.github.com/repos/andres-alvarez19/Property-based-testing/actions/runs`: 0 ejecuciones disponibles. El CI remoto queda pendiente de publicación; no se representa falsamente como verde.
+- Verificación remota posterior (2026-10-08): [GitHub Actions, run 37819728353](https://github.com/andres-alvarez19/Property-based-testing/actions/runs/37819728353) con conclusión **success** para el commit `625fe73a8d41cf41fb6ebba4bfe58f719405a46a`.
+- El job **Quality gate** terminó correctamente en todos sus pasos: checkout, configuración de Node.js, instalación de dependencias, typecheck, lint, tests y build.
+- `tasks/README.md` fue actualizado posteriormente para marcar T01–T09 como `DONE`. Estos cambios son exclusivamente documentales; la ejecución de CI referida corresponde al commit de implementación anterior a esta actualización.
